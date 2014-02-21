@@ -61,17 +61,6 @@
 		}
 
 
-		this.collision = function()
-		{
-			for(circle in circles)
-			{
-				if()
-
-
-			}
-
-		}
-
 		//creates the SVG element and returns it
 		var makeSVG = function(tag, attrs)
 		{
@@ -82,6 +71,40 @@
 	        }
 	        return el;
 	    }
+
+	    //detects the circle collisions
+	    this.circleCollision = function(circles)
+		{
+			//loop through the the circles
+			for(circle in circles)
+			{
+				//if the circle is not the circle being looped over and updated
+				if(this != circles[circle])
+				{
+					//get the sum of the radii
+					var rad_sum = this.info.r + circles[circle].info.r;
+					//get the diff of the x vectors
+					var vecx = circles[circle].info.cx - this.info.cx;
+					//get the diff of the y vectors
+					var vecy = circles[circle].info.cy - this.info.cy;
+					//get the sum of the vectors squared
+					var vec_sum = (vecx * vecx) + (vecy * vecy) 
+					//find the magnitude of the vectors
+					var vec_mag = Math.sqrt(vec_sum);
+					//if the sum of the radii is greater than the magnitude of the vectors
+					if(rad_sum > vec_mag)
+					{
+						//the circles have collided
+						console.log('COLLIDING AAAAAHHHH');
+						circles.splice(circles[circle].info.id, circles[circle])
+						
+					}
+
+
+				}
+			}
+		}
+
 
 	    this.initialize();
 	}
@@ -99,44 +122,13 @@
 			for(circle in circles)
 			{
 				circles[circle].update(1);
-			}	
-			
-			//loop through the array, comparing the two circles
-
-			for(var i = 0; i < circles.length; i++)
-			{
-				//hold the x and y value of circle[i]
-				var storedx = circles[i].cx;
-				var storedy = circles[i].cy;
+				circles[circle].circleCollision(circles);
 				
-				//loop through the array again once the cx, cy values are stored
-				for(var j = 0; j< circles.length; i++)
-				{
-					//get the sum of the radii
-					var rad_sum = circles[i].r + circles[j].r;
-					
-					//store the vectors
-					var vecx = storedx - circles[i].cx;
-					var vecy = storedy - circles[i].cy;
-					
-					//square the values
-					vecx2 = vecx * vecx;	
-					vecy2 = vecy * vecy;
-					//sum the values
-					vec_square_sum = vecx2 + vecx2;
-					vec_mag = Math.sqrt(vec_square_sum);
-
-					//delete one of the circles if they collide
-					if(vec_mag < rad_sum)
-					{
-						circles.splice(i, circles[i]);
-					}
-				}
-
-			}
+			}	
 
 			
 		}
+
 
 		this.createNewCircle = function(x,y,r)
 		{
@@ -156,44 +148,44 @@
 
 	
 	
+		
+	document.onmousedown = function (e)
+	{
+		var x = e.clientX;
+		var y = e.clientY;
+ 		var time = new Date(); //time in milliseconds
+  		document.onmouseup = function(e)
+  		{
+    		var diff = new Date()-time;
+    		diff = diff/10;
+    		playground.createNewCircle(x,y,diff)
+    		window.onmouseup=null;
+  		}
 
-	// document.onmousedown = function (e)
-	// {
-	// 	var x = e.clientX;
-	// 	var y = e.clientY;
- // 		var time = new Date(); //time in milliseconds
- //  		document.onmouseup = function(e)
- //  		{
- //    		var diff = new Date()-time;
- //    		diff = diff/10;
- //    		playground.createNewCircle(x,y,diff)
- //    		window.onmouseup=null;
- //  		}
-
-	// };
+	};
 		
 
 
-		(function () {
-			var element = document, start, end;
+		// (function () {
+		// 	var element = document, start, end;
 
-			element.onmousedown = function(e) {
-				x = e.clientX;
-				y = e.clientY;
-				start = +new Date();
-			}
-			element.onmouseup = function() 
-			{
-				end = +new Date();
-				var diff = end - start;
-				diff = diff/10;
-				playground.createNewCircle(x,y,diff);
-
-
-			};
+		// 	element.onmousedown = function(e) {
+		// 		x = e.clientX;
+		// 		y = e.clientY;
+		// 		start = +new Date();
+		// 	}
+		// 	element.onmouseup = function() 
+		// 	{
+		// 		end = +new Date();
+		// 		var diff = end - start;
+		// 		diff = diff/10;
+		// 		playground.createNewCircle(x,y,diff);
 
 
-		})();
+		// 	};
+
+
+		// })();
 	
 
 	document.onclick = function(e)
